@@ -8,13 +8,13 @@ _This project was implement for the sake of learning the programming language Ru
 
 ## Use cases
 
-This algorithm might be used for example on build servers to avoid copying the rebuild artifact, e.g. binary to the target machine as a whole.
+This algorithm might be used for example on build systems like [just](https://github.com/just-buildsystem/justbuild) or [bazel](https://bazel.build/) to avoid copying the rebuild artifact, e.g. binary to the target machine as a whole.
 
 ## Description
 
-### Principal idea.
+### Principal idea
 
-Given a file `a` which was copied from a source machine to a target `machine`. Then the file `a` is modified resulting in `a1`. Now both `a` and `a1` are available on source and `a` is available at target. The idea is to analyse the differences and common parts between `a` and `a1` on the source and transfer those differences in order to reconstruct `a1` on the target.
+Given a file `a` which was copied from a source machine to a target machine. Then the file `a` is modified resulting in `a1`. Now both `a` and `a1` are available on source and `a` is available at target. The idea is to analyse the differences and common parts between `a` and `a1` on the source and transfer those differences in order to reconstruct `a1` on the target.
 
 The protocol is divided into three parts:
 - Analyse differences and created patches
