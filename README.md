@@ -8,7 +8,7 @@ _This project was implement for the sake of learning the programming language Ru
 
 ## Use cases
 
-This algorithm might be used in build systems like [just](https://github.com/just-buildsystem/justbuild) or [bazel](https://bazel.build/) to avoid copying the rebuild artifact, e.g. binary to the target machine as a whole.
+This algorithm might be used in build systems like [just](https://github.com/just-buildsystem/justbuild) or [bazel](https://bazel.build/) to avoid copying the rebuilt artifacts/binary to the target machine as a whole.
 
 ## Description
 
