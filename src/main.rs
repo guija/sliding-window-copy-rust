@@ -16,9 +16,6 @@ impl ChunkContainer {
     fn hash_to_chunk(&self) -> HashMap<&String, &Chunk> {
         let mut map = HashMap::new();
         for chunk in &self.chunks {
-            // TODO GJA there is cloning going on here
-            // this is probably expensive. What is the usual
-            // way to make this work?
             map.insert(&chunk.hash, chunk);
         }
         map
@@ -43,32 +40,14 @@ struct Operation {
     payload: Vec<u8>,
 }
 
-fn sliding_window_analyze(old: &Vec<u8>, new: &Vec<u8>, window_size: usize) -> Vec<Operation> {
-    // println!("Old: {}", old);
-    // println!("New: {}", new);
-
-    // println!("Window size: {}", window_size);
-
-    // let mut byte_number = 0;
-
-    // // println!("\nSource:");
-    // for b in old.bytes() {
-    //     let char = b as char;
-    //     println!("byte\t{}: \t{}\t(char {})", byte_number, b, char);
-    //     byte_number += 1;
-    // }
-
-    // println!("\nold windows:");
-    let old_container = windows(&old, window_size);
+fn sliding_window_analyze(
+    original_bytes: &Vec<u8>,
+    modified_bytes: &Vec<u8>,
+    window_size: usize,
+) -> Vec<Operation> {
+    let old_container = windows(&original_bytes, window_size);
     let old_hash_to_chunk = old_container.hash_to_chunk();
-
-    // println!("\new windows:");
-    let new_container = windows(&new, window_size);
-
-    // println!("\nDiffing...");
-    // Wir wollen wissen welche chunks des target containers bereits im source container sind
-    // bzw. welche stellen des source container wo im target container eingetragen werden muessen (Die Luecken)
-
+    let new_container = windows(&modified_bytes, window_size);
     let mut last_position: usize = 0;
     let mut operations: Vec<Operation> = Vec::new();
 
@@ -81,13 +60,6 @@ fn sliding_window_analyze(old: &Vec<u8>, new: &Vec<u8>, window_size: usize) -> V
 
         let old_chunk = old_hash_to_chunk.get(&chunk.hash);
         let found = old_chunk.is_some();
-        // println!(
-        //     "chunk {}: {} \t[{};{}[",
-        //     chunk.hash,
-        //     found,
-        //     chunk.start_position(),
-        //     chunk.end_position()
-        // );
 
         let operation = match found {
             true => Operation {
@@ -100,7 +72,7 @@ fn sliding_window_analyze(old: &Vec<u8>, new: &Vec<u8>, window_size: usize) -> V
                 operation_type: OperationType::TRANSFER,
                 start: chunk.position,
                 bytes: chunk.size,
-                payload: new[chunk.position..chunk.position + chunk.size].to_vec(),
+                payload: modified_bytes[chunk.position..chunk.position + chunk.size].to_vec(),
             },
         };
         operations.push(operation);
@@ -108,25 +80,25 @@ fn sliding_window_analyze(old: &Vec<u8>, new: &Vec<u8>, window_size: usize) -> V
     }
 
     // Handle the last chunk if it is smaller then the window size
-    if last_position < new.len() {
+    if last_position < modified_bytes.len() {
         operations.push(Operation {
             operation_type: OperationType::TRANSFER,
             start: last_position,
-            bytes: new.len() - last_position,
-            payload: new[last_position..new.len()].to_vec(),
+            bytes: modified_bytes.len() - last_position,
+            payload: modified_bytes[last_position..modified_bytes.len()].to_vec(),
         });
     }
 
     operations
 }
 
-fn sliding_window_restore(old: &Vec<u8>, operations: Vec<Operation>) -> Vec<u8> {
-    // perform this has to be implemented in the target.
-    // The interface is the list of operations.
+fn sliding_window_restore(original_bytes: &Vec<u8>, operations: Vec<Operation>) -> Vec<u8> {
     let mut result: Vec<u8> = Vec::new();
     for operation in &operations {
         let mut chunk: Vec<u8> = match operation.operation_type {
-            OperationType::COPY => &old[operation.start..operation.start + operation.bytes],
+            OperationType::COPY => {
+                &original_bytes[operation.start..operation.start + operation.bytes]
+            }
             OperationType::TRANSFER => operation.payload.as_slice(),
         }
         .to_vec();
