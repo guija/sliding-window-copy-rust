@@ -13,13 +13,13 @@ struct Chunk {
 }
 
 impl ChunkContainer {
-    fn hash_to_chunk(&self) -> HashMap<String, Chunk> {
+    fn hash_to_chunk(&self) -> HashMap<&String, &Chunk> {
         let mut map = HashMap::new();
         for chunk in &self.chunks {
             // TODO GJA there is cloning going on here
             // this is probably expensive. What is the usual
             // way to make this work?
-            map.insert(chunk.hash.clone(), chunk.clone());
+            map.insert(&chunk.hash, chunk);
         }
         map
     }
