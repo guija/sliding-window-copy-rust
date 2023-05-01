@@ -23,7 +23,7 @@ The protocol is divided into three parts:
 
 ### Analyse differences and created patches
 
- First, analyse the differences between `a` and `a1`. This is done by sliding windows over `a` and `a1`. For each window a hash is calculated. Then we find all the windows in `a1` that are already existing in `a`. For all bytes that are not covered by such a window we create a patch, called `Operation.TRANSFER`. For all windows that are already covered we created an `Operation.COPY`. `TRANSFER` means that the actual bytes have to be copied from the source to the target. `COPY` means that the bytes can be locally copied on the target from as we know they are already present there. 
+ First, analyse the differences between `a` and `a1`. This is done by sliding windows over `a` and `a1`. For each window a hash is calculated. Then we find all the windows in `a1` that are already existing in `a`. For all bytes that are not covered by such a window we create a patch, called `Operation.TRANSFER`. For all windows that are already covered we create an `Operation.COPY`. `TRANSFER` means that the actual bytes have to be copied from the source to the target. `COPY` means that the bytes can be locally copied on the target from `a` as we know they are already present there. 
 
  The signature is the following:
 
