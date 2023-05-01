@@ -33,7 +33,7 @@ The protocol is divided into three parts:
 
  ### Transfer patches
 
- The set of `Operations` can be transferred from the source to the target machine. Both `TRANSFER` and `COPY` operations are transferred while online the `TRANSFER` operations contain a binary payload whereas the `COPY` operations only carry meta data.
+ The set of `Operations` can be transferred from the source to the target machine. Both `TRANSFER` and `COPY` operations are transferred while online the `TRANSFER` operations contain a binary payload whereas the `COPY` operations only carry meta data. Any protocol or transfer method can be used here and is up to the architecture of the software system that embeds this protocol.
 
  ### Reconstruct target file by copying existing parts and applying patches
 
