@@ -1,5 +1,7 @@
 # Sliding window remote file copy algorithm / protocol
 
+[![Rust](https://github.com/guija/sliding-window-copy-rust/actions/workflows/rust.yml/badge.svg)](https://github.com/guija/sliding-window-copy-rust/actions/workflows/rust.yml)
+
 Prototypical implementation (in Rust) of an algorithmn that copies modified files from a source to a target assuming that an old version of the file is on the target and both the new and the old version of the file exists on the host.
 
 _This project was implement for the sake of learning the programming language Rust._
